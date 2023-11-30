@@ -1,0 +1,35 @@
+spring.cloud.stream:
+  kafka.streams:
+    binder:
+      configuration:
+        commit.interval.ms: 10
+        default.key.serde: org.apache.kafka.common.serialization.Serdes$StringSerde
+        default.value.serde: org.apache.kafka.common.serialization.Serdes$StringSerde
+        application.id: dlq-demo-sample
+      serdeError: sendToDlq
+
+    bindings.process-in-0.consumer:
+      dlqName: words-count-dlq
+      keySerde: org.apache.kafka.common.serialization.Serdes$StringSerde
+      valueSerde: org.apache.kafka.common.serialization.Serdes$StringSerde
+
+  bindings:
+    process-in-0:
+      destination: words
+      consumer:
+        concurrency: 5
+#        retryTemplateName: myRetryTemplate
+#        retryTemplate:
+#          maxAttempts: 7
+#          backOff:
+#            initialInterval: 1000
+#            maxInterval: 5000
+#            multiplier: 2.0
+    process-out-0:
+      destination: counts
+    process-out-1:
+      destination: a
+    process-out-2:
+      destination: b
+    process-out-3:
+      destination: c
